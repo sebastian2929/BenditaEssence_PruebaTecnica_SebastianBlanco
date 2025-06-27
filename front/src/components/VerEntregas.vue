@@ -40,7 +40,7 @@ const buscado = ref(false)
 
 const consultarEntregas = async () => {
   try {
-    const res = await axios.get(`http://localhost:8080/api/clientes/${correo.value}/entregas`)
+    const res = await axios.get(`http://localhost:8080/api/entregas/cliente/${correo.value}`)
     entregas.value = res.data || []
   } catch (err) {
     alert('❌ Error consultando entregas: ' + (err.response?.data?.message || 'Error desconocido'))
@@ -54,6 +54,7 @@ const formatearFecha = (fechaStr) => {
   return fechaStr?.substring(0, 10) || ''
 }
 </script>
+
 
 <style scoped>
 .container {

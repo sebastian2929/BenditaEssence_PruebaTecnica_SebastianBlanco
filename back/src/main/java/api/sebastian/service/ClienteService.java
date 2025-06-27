@@ -9,27 +9,22 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ClienteService {
-
     private final ClienteRepository clienteRepository;
+    private final SalesforceService salesforceService;
 
-    public Cliente crearCliente(ClienteDTO dto) {
-        // Verifica si ya existe un cliente con el correo proporcionado
-        if (clienteRepository.existsByCorreo(dto.getCorreo())) {
-            throw new RuntimeException("Ya existe un cliente con ese correo.");
+
+    public void crearCliente(ClienteDTO dto) {
+        if (clienteRepository.existsById(dto.getCorreo())) {
+            throw new RuntimeException("El cliente con correo " + dto.getCorreo() + " ya está registrado");
         }
 
-        Cliente cliente = Cliente.builder()
-                .correo(dto.getCorreo())
-                .nombre(dto.getNombre())
-                .apellido(dto.getApellido())
-                .celular(dto.getCelular())
-                .build();
+        Cliente cliente = new Cliente();
+        cliente.setNombre(dto.getNombre());
+        cliente.setApellido(dto.getApellido());
+        cliente.setCelular(dto.getCelular());
+        cliente.setCorreo(dto.getCorreo());
 
-        return clienteRepository.save(cliente);
-    }
-
-    public Cliente obtenerCliente(String correo) {
-        return clienteRepository.findById(correo)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con correo: " + correo));
+        clienteRepository.save(cliente);
+        salesforceService.crearLead(cliente); 
     }
 }

@@ -1,18 +1,13 @@
 package api.sebastian.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Cliente {
-
     @Id
     private String correo;
 
@@ -21,6 +16,5 @@ public class Cliente {
     private String celular;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<Entrega> entregas;
 }
